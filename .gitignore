@@ -1,0 +1,19 @@
+# Virtuelle Umgebung
+.venv/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+
+# Tests
+.pytest_cache/
+
+# VS Code
+.vscode/
+
+# Datenbank
+data/*.db
+data/*.sqlite3
+
+# Umgebungsvariablen
+.env
