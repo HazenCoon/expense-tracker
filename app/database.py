@@ -41,3 +41,23 @@ def add_transaction(amount, transaction_type, category, date, description=None):
     )
     connection.commit()
     connection.close()
+
+
+def get_transactions():
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT 
+        id,
+        amount,
+        transaction_type,
+        category,
+        date,
+        description
+        FROM transactions
+        ORDER BY date DESC, id DESC
+""")
+    data = cursor.fetchall()
+    connection.close()
+    return data
