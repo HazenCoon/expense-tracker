@@ -31,3 +31,14 @@ def test_add_transactions_rejects_zero_amount(tmp_path, monkeypatch):
     database.create_table()
     with pytest.raises(sqlite3.IntegrityError):
         database.add_transaction(0, "income", "Gehalt", "2026-10-19", "Test add 0")
+
+
+def test_add_transactions_rejects_unknown_type(tmp_path, monkeypatch):
+    (tmp_path / "data").mkdir()
+    monkeypatch.chdir(tmp_path)
+
+    database.create_table()
+    with pytest.raises(sqlite3.IntegrityError):
+        database.add_transaction(
+            50, "transfer", "Gehalt", "2026-09-25", "Test wrong transaction-type"
+        )
