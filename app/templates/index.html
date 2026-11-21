@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Expense Tracker</title>
-    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="/static/style.css">
 </head>
+
 <body>
     <header class="page-header">
         <h1>Mein Expense Tracker</h1>
@@ -17,20 +19,29 @@
             <h2 id="form-title">Buchung hinzufügen</h2>
             <form>
                 <label for="transaction-type">Art der Buchung</label>
-            </label>
-            <select id="transaction-type" name="transaction-type">
-                <option value="expense">Ausgabe</option>
-                <option value="income">Einnahme</option>
-            </select>
-            <labelfor="amount">Betrag in Euro</label>
-            <input id ="amount" name="amount" type="number" min="0.01" step="0.01" required>
-            <label for="category">Kategorie</label>
-            <input id="category" name="category" type="text" required>
-            <label for="date">Datum</label>
-            <input id="date" name="date" type="text" required>
-            <label description">Beschreibung</label>
-            <input id="description" name="description" type="text">
-            <button type="button">Speichern</button>
+                <select id="transaction-type" name="transaction_type">
+                    <option value="expense">Ausgabe</option>
+                    <option value="income">Einnahme</option>
+                </select>
+                <label for="amount">Betrag in Euro</label>
+                <input id="amount" name="amount" type="number" min="0.01" step="0.01" required>
+                <label for="category">Kategorie</label>
+                <select id="category" name="category" required>
+                    {% for transaction_type, categories in categories_by_type.items()%}
+                    <optgroup label="{{ 'Einnahmen' if transaction_type == 'income' else 'Ausgaben'}}"
+                        data-transaction-type="{{ transaction_type}}">
+                        {% for category in categories%}
+                        <option value="{{ category }}">{{ category }}
+                        </option>
+                        {% endfor %}
+                    </optgroup>
+                    {% endfor%}
+                </select>
+                <label for="date">Datum</label>
+                <input id="date" name="date" type="date" required>
+                <label for="description">Beschreibung</label>
+                <input id="description" name="description" type="text">
+                <button type="button">Speichern</button>
             </form>
         </section>
         <section class="panel" aria-labelledby="transactions-title">
@@ -46,16 +57,29 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {% for transaction in transactions%}
                     <tr>
-                        <td>21.11.2026</td>
-                        <td>Beispielbuchung</td>
-                        <td>Lebensmittel</td>
-                        <td>Ausgabe</td>
-                        <td>12,50 €</td>
+                        <td>{{ transaction[4] }}</td>
+                        <td>{{ transaction[5] or ""}}</td>
+                        <td>{{ transaction[3]}}</td>
+                        <td>
+                            {% if transaction[2] == "income" %}
+                            Einnahme
+                            {% else %}
+                            Ausgabe
+                            {% endif %}
+                        </td>
+                        <td>{{ "%.2f"|format(transaction[1] / 100) }}€</td>
                     </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5">Noch keine Buchungen vorhanden.</td>
+                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </section>
     </main>
 </body>
+
 </html>
