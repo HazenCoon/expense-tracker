@@ -121,3 +121,25 @@ def test_post_transaction_form_rejects_more_than_two_decimal_places(
 
         assert response.status_code == 422
         assert client.get("/transactions").json() == []
+
+
+def test_page_displays_german_date_but_api_keeps_iso_date(tmp_path, monkeypatch):
+    (tmp_path / "data").mkdir()
+    monkeypatch.chdir(tmp_path)
+
+    database.create_table()
+    database.add_transaction(
+        1250,
+        "expense",
+        "Lebensmittel",
+        "2026-11-22",
+        "Testdatum",
+    )
+
+    from app.main import app
+
+    with TestClient(app) as client:
+        page = client.get("/")
+        transactions = client.get("/transactions").json()
+    assert "22.11.2026" in page.text
+    assert transactions[0][4] == "2026-11-22"

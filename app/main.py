@@ -5,12 +5,24 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 from app.services import CATEGORIES_BY_TYPE
+from datetime import datetime
 
 BASE_DIR = Path(__file__).resolve().parent
 create_table()
 app = FastAPI()
 
 templates = Jinja2Templates(directory=BASE_DIR / "templates")
+
+
+def format_german_date(value: str) -> str:
+    try:
+        return datetime.strptime(value, "%Y-%m-%d").strftime("%d.%m.%Y")
+    except ValueError:
+        return value
+
+
+templates.env.filters["german_date"] = format_german_date
+
 app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
 app.include_router(transactions_router)
 

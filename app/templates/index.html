@@ -69,7 +69,7 @@
                     <tbody>
                         {% for transaction in transactions%}
                         <tr>
-                            <td>{{ transaction[4] }}</td>
+                            <td>{{ transaction[4] | german_date}}</td>
                             <td>{{ transaction[5] or ""}}</td>
                             <td>{{ transaction[3]}}</td>
                             <td>
