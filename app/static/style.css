@@ -20,8 +20,8 @@ body {
     margin: 2rem auto;
 }
 
-.panel{
-    margin-bottom: 1,5rem;
+.panel {
+    margin-bottom: 1.5rem;
     padding: 1.5rem;
     border-radius: 12px;
     background: white;
@@ -33,7 +33,7 @@ form {
     max-width: 450px;
 }
 
-input,
+input:not([type="radio"]),
 select,
 button {
     padding: 0.7rem;
@@ -59,4 +59,37 @@ td {
     padding: 0.75rem;
     border-bottom: 1px solid #e5e7eb;
     text-align: left;
+}
+
+fieldset {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+}
+
+fieldset label {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.amount {
+    display: grid;
+    grid-template-columns: minmax(5ch, 1fr) auto 2ch auto;
+    font-variant-numeric: tabular-nums;
+}
+
+.amount-euros {
+    text-align: right;
+}
+
+.amount-comma {
+    text-align: center;
+}
+
+.amount-currency {
+    margin-left: 0.5rem;
 }

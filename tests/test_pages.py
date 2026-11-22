@@ -11,13 +11,14 @@ def test_pages_returns_category_filter_and_category(tmp_path, monkeypatch):
 
     with TestClient(app) as client:
         response = client.get("/")
+        html = " ".join(response.text.split())
     assert response.status_code == 200
     assert "Noch keine Buchungen vorhanden" in response.text
     assert 'src="/static/category-filter.js"' in response.text
     assert 'data-transaction-type="income"' in response.text
     assert 'data-transaction-type="expense"' in response.text
-    assert 'type="radio" name="transaction_type" value="expense"' in response.text
-    assert 'type="radio" name="transaction_type" value="income"' in response.text
+    assert 'type="radio" name="transaction_type" value="expense"' in html
+    assert 'type="radio" name="transaction_type" value="income"' in html
 
 
 def test_post_transactions_form_converts_to_int(tmp_path, monkeypatch):
