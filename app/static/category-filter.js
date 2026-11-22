@@ -1,9 +1,9 @@
-const transactionTypeSelect = document.getElementById("transaction-type");
+const transactionTypeInputs = document.querySelectorAll('input[name="transaction_type"]');
 const categorySelect = document.getElementById("category");
 const categoryGroups = Array.from(categorySelect.querySelectorAll("optgroup"));
 
 function updateCategories() {
-    const selectedType = transactionTypeSelect.value;
+    const selectedType = document.querySelector('input[name="transaction_type"]:checked').value;
     const matchingGroup = categoryGroups.find(
         (group) => group.dataset.transactionType === selectedType
     );
@@ -12,7 +12,7 @@ function updateCategories() {
     categorySelect.selectedIndex = 0;
 }
 
-transactionTypeSelect.addEventListener("change", 
-    updateCategories
-);
+transactionTypeInputs.forEach((input) => {
+    input.addEventListener("change", updateCategories);
+});
 updateCategories();
