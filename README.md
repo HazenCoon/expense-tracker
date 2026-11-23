@@ -54,3 +54,54 @@ python -m pytest
 | `GET`| `/transactions`| Gibt Buchungen als JSON zurück|
 | `POST`| `/transactions`| Speichert eine Buchung aus JSON; der Betrag wird in Cent erwartet|
 | `POST`| `/transactions/form`| Speichert eine Formularbuchung und leitet zur Startseite zurück|
+
+### Beispiel: Buchung als JSON anlegen
+
+An den Endpunkt POST /transactions wird ein JSON-Objekt gesendet:
+
+```json
+{
+    "amount": 2500,
+    "transaction_type": "expense",
+    "category": "Lebensmittel",
+    "date": "2026-11-22",
+    "description": "Wocheneinkauf"
+}
+```
+
+Der Betrag wird in Cent angegeben: `2500` entspricht `25,00 €`. Bei Erfolg antwortet die API mit Status `201`:
+
+```json
+{
+    "message": "Transaktion erfolgreich gespeichert!"
+}
+```
+
+## Projektstruktur
+
+```text
+app/
+├── main.py
+├── database.py
+├── schemas.py
+├── services.py
+├── routers/
+│   └── transactions.py
+├── templates/
+│   └── index.html
+└── static/
+│   ├── category-filter.js
+│   └── style.css
+
+tests/
+├── test_api.py
+├── test_database.py
+└── test_pages.py
+
+```
+
+- `main.py` startet FastAPI und zeigt die Website an.
+- `database.py` verwaltet die SQLite-Datenbank.
+- `routers/` enthält die Transaktions-Endpunkte.
+- `templates/` und `static/` enthalten die Oberfläche.
+- `tests/` enthält die automatisierten Tests.
