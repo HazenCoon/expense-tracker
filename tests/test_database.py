@@ -3,6 +3,14 @@ import sqlite3
 import pytest
 
 
+def test_create_table_creates_data_directory(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+
+    database.create_table()
+
+    assert (tmp_path / "data" / "expense_tracker.db").exists()
+
+
 def test_get_transactions_returns_saved_transaction(tmp_path, monkeypatch):
     (tmp_path / "data").mkdir()
     monkeypatch.chdir(tmp_path)

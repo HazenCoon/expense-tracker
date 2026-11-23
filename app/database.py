@@ -1,8 +1,11 @@
 import sqlite3
+from pathlib import Path
 
 
 def get_connection():
-    return sqlite3.connect("data/expense_tracker.db")
+    data_directory = Path("data")
+    data_directory.mkdir(exist_ok=True)
+    return sqlite3.connect(data_directory / "expense_tracker.db")
 
 
 def create_table():
