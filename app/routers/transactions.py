@@ -4,6 +4,7 @@ from app.schemas import TransactionCreate
 from decimal import Decimal
 from fastapi.responses import RedirectResponse
 from app.services import CATEGORIES_BY_TYPE
+from datetime import date as Date
 
 router = APIRouter()
 
@@ -29,7 +30,7 @@ def create_transactions(transaction: TransactionCreate):
         transaction.amount,
         transaction.transaction_type,
         transaction.category,
-        transaction.date,
+        transaction.date.isoformat(),
         transaction.description,
     )
     return {"message": "Transaktion erfolgreich gespeichert!"}
@@ -40,7 +41,7 @@ def create_transaction_from_form(
     amount: Decimal = Form(...),
     transaction_type: str = Form(...),
     category: str = Form(...),
-    date: str = Form(...),
+    date: Date = Form(...),
     description: str | None = Form(None),
 ):
 
@@ -65,7 +66,7 @@ def create_transaction_from_form(
         int(amount_in_cents),
         transaction_type,
         category,
-        date,
+        date.isoformat(),
         description,
     )
     return RedirectResponse(url="/", status_code=303)

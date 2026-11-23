@@ -115,3 +115,26 @@ def test_post_transactions_rejects_amount_zero(tmp_path, monkeypatch):
         transactions = client.get("/transactions").json()
         assert response.status_code == 422
         assert transactions == []
+
+
+def test_post_transactions_rejects_invalid_date(tmp_path, monkeypatch):
+    (tmp_path / "data").mkdir()
+    monkeypatch.chdir(tmp_path)
+
+    database.create_table()
+    from app.main import app
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/transactions",
+            json={
+                "amount": 1000,
+                "transaction_type": "expense",
+                "category": "Lebensmittel",
+                "date": "2026-99-99",
+                "description": "Ungültiges Datum",
+            },
+        )
+        transactions = client.get("/transactions").json()
+        assert response.status_code == 422
+        assert transactions == []
