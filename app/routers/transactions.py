@@ -15,6 +15,16 @@ def read_transactions():
 
 @router.post("/transactions", status_code=201)
 def create_transactions(transaction: TransactionCreate):
+    if transaction.category not in CATEGORIES_BY_TYPE[transaction.transaction_type]:
+        raise HTTPException(
+            status_code=422,
+            detail="Diese Kategorie passt nicht zur Buchungsart.",
+        )
+    if transaction.amount <= 0:
+        raise HTTPException(
+            status_code=422,
+            detail="Der Betrag muss größer als 0 sein.",
+        )
     add_transaction(
         transaction.amount,
         transaction.transaction_type,
@@ -33,6 +43,7 @@ def create_transaction_from_form(
     date: str = Form(...),
     description: str | None = Form(None),
 ):
+
     if transaction_type not in CATEGORIES_BY_TYPE:
         raise HTTPException(status_code=422, detail="Ungültige Buchungsart.")
     if category not in CATEGORIES_BY_TYPE[transaction_type]:

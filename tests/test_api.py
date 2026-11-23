@@ -69,3 +69,49 @@ def test_post_transactions_rejects_invalid_transaction_type(tmp_path, monkeypatc
         response = client.get("/transactions")
     assert post.status_code == 422
     assert response.json() == []
+
+
+def test_post_transactions_rejects_category_for_wrong_type(tmp_path, monkeypatch):
+    (tmp_path / "data").mkdir()
+    monkeypatch.chdir(tmp_path)
+
+    database.create_table()
+    from app.main import app
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/transactions",
+            json={
+                "amount": 2500,
+                "transaction_type": "expense",
+                "category": "Gehalt",
+                "date": "2026-11-22",
+                "description": "Ungültige Kombination",
+            },
+        )
+        transactions = client.get("/transactions").json()
+        assert response.status_code == 422
+        assert transactions == []
+
+
+def test_post_transactions_rejects_amount_zero(tmp_path, monkeypatch):
+    (tmp_path / "data").mkdir()
+    monkeypatch.chdir(tmp_path)
+
+    database.create_table()
+    from app.main import app
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/transactions",
+            json={
+                "amount": 0,
+                "transaction_type": "expense",
+                "category": "Lebensmittel",
+                "date": "2026-10-20",
+                "description": "Ungültige Eingabe in amount",
+            },
+        )
+        transactions = client.get("/transactions").json()
+        assert response.status_code == 422
+        assert transactions == []

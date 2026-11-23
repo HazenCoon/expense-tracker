@@ -39,3 +39,18 @@ Die Anwendung ist anschließend unter http://127.0.0.1:8000 erreichbar. Mit `Ctr
 ```powershell
 python -m pytest
 ```
+
+## Technologien
+
+- Python und FastAPI für Backend und API
+- SQLite für die Datenspeicherung
+- Jinja2, HTML, CSS und JavaScript für die Benutzeroberfläche
+- pytest für automatisierte Tests
+
+## API-Endpunkte
+
+| Methode | Pfad | Beschreibung |
+|---|---|---|
+| `GET`| `/transactions`| Gibt Buchungen als JSON zurück|
+| `POST`| `/transactions`| Speichert eine Buchung aus JSON; der Betrag wird in Cent erwartet|
+| `POST`| `/transactions/form`| Speichert eine Formularbuchung und leitet zur Startseite zurück|
