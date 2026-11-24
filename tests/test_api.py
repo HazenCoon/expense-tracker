@@ -1,6 +1,7 @@
 from app.routers import transactions
 import app.database as database
 from fastapi.testclient import TestClient
+from datetime import date, timedelta
 
 
 def test_get_transactions_returns_empty_list(tmp_path, monkeypatch):
@@ -138,3 +139,28 @@ def test_post_transactions_rejects_invalid_date(tmp_path, monkeypatch):
         transactions = client.get("/transactions").json()
         assert response.status_code == 422
         assert transactions == []
+
+
+def test_post_transaction_rejects_future_date(tmp_path, monkeypatch):
+    (tmp_path / "data").mkdir()
+    monkeypatch.chdir(tmp_path)
+
+    database.create_table()
+    from app.main import app
+
+    future_date = (date.today() + timedelta(days=1)).isoformat()
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/transactions/form",
+            data={
+                "amount": "1000",
+                "transaction_type": "expense",
+                "category": "Lebensmittel",
+                "date": future_date,
+                "description": "Datum in der Zukunft",
+            },
+        )
+        transactions = client.get("/transactions").json()
+    assert response.status_code == 422
+    assert transactions == []

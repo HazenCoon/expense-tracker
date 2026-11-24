@@ -1,5 +1,6 @@
 from fastapi.testclient import TestClient
 import app.database as database
+from datetime import date, timedelta
 
 
 def test_pages_returns_category_filter_and_category(tmp_path, monkeypatch):
@@ -143,3 +144,28 @@ def test_page_displays_german_date_but_api_keeps_iso_date(tmp_path, monkeypatch)
         transactions = client.get("/transactions").json()
     assert "22.11.2026" in page.text
     assert transactions[0][4] == "2026-11-22"
+
+
+def test_post_transaction_form_rejects_future_date(tmp_path, monkeypatch):
+    (tmp_path / "data").mkdir()
+    monkeypatch.chdir(tmp_path)
+
+    database.create_table()
+    from app.main import app
+
+    future_date = (date.today() + timedelta(days=1)).isoformat()
+
+    with TestClient(app, follow_redirects=False) as client:
+        response = client.post(
+            "/transactions/form",
+            data={
+                "amount": "10.00",
+                "transaction_type": "expense",
+                "category": "Lebensmittel",
+                "date": future_date,
+                "description": "Datum in der Zukunft",
+            },
+        )
+        transactions = client.get("/transactions").json()
+    assert response.status_code == 422
+    assert transactions == []

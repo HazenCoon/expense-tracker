@@ -29,11 +29,16 @@ app.include_router(transactions_router)
 
 @app.get("/")
 def read_root(request: Request):
+    error_message = None
+    if request.query_params.get("error") == "invalid_date":
+        error_message = "Bitte geben Sie ein gültiges Datum ein."
     return templates.TemplateResponse(
         request=request,
         name="index.html",
         context={
             "transactions": get_transactions(),
             "categories_by_type": CATEGORIES_BY_TYPE,
+            "error": error_message,
+            "today": datetime.today().date().isoformat(),
         },
     )

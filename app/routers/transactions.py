@@ -26,6 +26,11 @@ def create_transactions(transaction: TransactionCreate):
             status_code=422,
             detail="Der Betrag muss größer als 0 sein.",
         )
+    if transaction.date > Date.today():
+        raise HTTPException(
+            status_code=422,
+            detail="Das Datum darf nicht in der Zukunft liegen.",
+        )
     add_transaction(
         transaction.amount,
         transaction.transaction_type,
@@ -41,7 +46,7 @@ def create_transaction_from_form(
     amount: Decimal = Form(...),
     transaction_type: str = Form(...),
     category: str = Form(...),
-    date: Date = Form(...),
+    date: str = Form(...),
     description: str | None = Form(None),
 ):
 
@@ -61,12 +66,20 @@ def create_transaction_from_form(
             status_code=422,
             detail="Der Betrag darf höchstens zwei Nachkommastellen haben.",
         )
-
+    try:
+        parsed_date = Date.fromisoformat(date)
+    except ValueError:
+        return RedirectResponse(url="/?error=invalid_date", status_code=303)
+    if parsed_date > Date.today():
+        raise HTTPException(
+            status_code=422,
+            detail="Das Datum darf nicht in der Zukunft liegen.",
+        )
     add_transaction(
         int(amount_in_cents),
         transaction_type,
         category,
-        date.isoformat(),
+        parsed_date.isoformat(),
         description,
     )
     return RedirectResponse(url="/", status_code=303)

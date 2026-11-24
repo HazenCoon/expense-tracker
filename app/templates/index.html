@@ -19,6 +19,9 @@
             <section class="panel" aria-labelledby="form-title">
                 <h2 id="form-title">Buchung hinzufügen</h2>
                 <form action="/transactions/form" method="post">
+                    {% if error %}
+                    <p class="form-error" role="alert">{{ error }}</p>
+                    {% endif %}
                     <fieldset>
                         <legend>Art der Buchung</legend>
                         <label>
@@ -48,7 +51,10 @@
                         {% endfor%}
                     </select>
                     <label for="date">Datum</label>
-                    <input id="date" name="date" type="date" required>
+                    <input id="date" name="date" type="date"
+                        max="{{ today }}" required>
+                    <p id="date-error" class="form-error" role="alert"
+                        hidden></p>
                     <label for="description">Beschreibung</label>
                     <input id="description" name="description" type="text">
                     <button type="submit">Speichern</button>
