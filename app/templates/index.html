@@ -4,34 +4,36 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Expense Tracker</title>
+        <title>Finanz-Tracker</title>
         <link rel="stylesheet" href="/static/style.css">
         <script src="/static/category-filter.js" defer></script>
     </head>
 
     <body>
         <header class="page-header">
-            <h1>Mein Expense Tracker</h1>
+            <h1>Mein Finanz-Tracker</h1>
             <p>Einnahmen und Ausgaben im Überblick</p>
         </header>
 
         <main class="page-content">
-            <section class="panel" aria-labelledby="form-title">
+            <section class="panel form-panel" aria-labelledby="form-title">
                 <h2 id="form-title">Buchung hinzufügen</h2>
                 <form action="/transactions/form" method="post">
                     {% if error %}
                     <p class="form-error" role="alert">{{ error }}</p>
                     {% endif %}
-                    <fieldset>
-                        <legend>Art der Buchung</legend>
-                        <label>
-                            <input type="radio" name="transaction_type"
-                                value="expense" checked>Ausgabe
-                        </label>
-                        <label>
-                            <input type="radio" name="transaction_type"
-                                value="income">Einnahme
-                        </label>
+                    <div id="transaction-type-label">Art der Buchung</div>
+                    <fieldset aria-labelledby="transaction-type-label">
+                        <div class="transaction-type-options">
+                            <label>
+                                <input type="radio" name="transaction_type"
+                                    value="expense" checked>Ausgabe
+                            </label>
+                            <label>
+                                <input type="radio" name="transaction_type"
+                                    value="income">Einnahme
+                            </label>
+                        </div>
                     </fieldset>
                     <label for="amount">Betrag in Euro</label>
                     <input id="amount" name="amount" type="number" min="0.01"
@@ -69,7 +71,7 @@
                             <th>Beschreibung</th>
                             <th>Kategorie</th>
                             <th>Art</th>
-                            <th>Betrag (€)</th>
+                            <th class="amount-cell">Betrag (€)</th>
                         </tr>
                     </thead>
                     <tbody>

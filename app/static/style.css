@@ -10,12 +10,13 @@ body {
 }
 
 .page-header {
+    font-size: large;
+    text-align: center;
     padding: 2rem;
     background: white;
 }
 
 .page-content {
-
     width: min(100% - 2rem, 900px);
     margin: 2rem auto;
 }
@@ -28,6 +29,7 @@ body {
 }
 
 form {
+    margin-inline: auto;
     display: grid;
     gap: 0.75rem;
     max-width: 450px;
@@ -62,7 +64,7 @@ td {
 }
 
 fieldset {
-    display: flex;
+    display: block;
     align-items: center;
     gap: 1rem;
     padding: 0.75rem;
@@ -94,6 +96,10 @@ fieldset label {
     margin-left: 0.5rem;
 }
 
+.amount-cell {
+    text-align: right;
+}
+
 .form-error {
     margin: 0;
     padding: 0.75rem;
@@ -101,4 +107,23 @@ fieldset label {
     border-radius: 6px;
     color: #991b1b;
     background: #fef2f2;
+}
+
+.form-panel {
+    max-width: 500px;
+    margin-inline: auto;
+}
+
+.form-panel h2 {
+    text-align: center;
+}
+
+.form-panel form {
+    margin-inline: auto;
+}
+
+.transaction-type-options {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
 }
